@@ -2,6 +2,7 @@ let wrap = document.querySelector('#wrap'),
     $hsl = document.querySelector('#hslText'),
     $rgb = document.querySelector('#rgbText'),
     $hex = document.querySelector('#hexText'),
+    theme = document.querySelectorAll('meta[name="theme-color"]'),
     h = 200, s = 50, l = 40,
     r = 255, g = 255, b = 255,
     hsl = function () {
@@ -33,14 +34,24 @@ $hsl.innerHTML = hsl();
 $rgb.innerHTML = rgb();
 $hex.innerHTML = hex();
 
+theme.forEach(element => {
+    element.setAttribute("content", hsl());
+});
 
 function handleMouse(event) {
     h = Math.round(event.clientX / (window.innerWidth / 360)),
-        s = Math.round(event.clientY / (window.innerHeight / 100));
+    s = Math.round(event.clientY / (window.innerHeight / 100));
+
+    theme.forEach(element => {
+        element.setAttribute("content", hsl());
+    });
+
     wrap.style.backgroundColor = hsl();
+
     $hsl.innerHTML = hsl();
     $rgb.innerHTML = rgb();
     $hex.innerHTML = hex();
+
 }
 
 function handleKeys(event) {
@@ -50,6 +61,9 @@ function handleKeys(event) {
     $hsl.innerHTML = hsl();
     $rgb.innerHTML = rgb();
     $hex.innerHTML = hex();
+    theme.forEach(element => {
+        element.setAttribute("content", hsl());
+    });
     wrap.style.backgroundColor = hsl();
 }
 
