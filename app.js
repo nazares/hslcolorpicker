@@ -1,10 +1,9 @@
-let wrap = document.querySelector('#wrap'),
+const wrap = document.querySelector('#wrap'),
     $hsl = document.querySelector('#hslText'),
     $rgb = document.querySelector('#rgbText'),
     $hex = document.querySelector('#hexText'),
-    theme = document.querySelectorAll('meta[name="theme-color"]'),
-    h = 200, s = 50, l = 40,
-    r = 255, g = 255, b = 255,
+    theme = document.querySelectorAll('meta[name="theme-color"]');
+let h = 200, s = 50, l = 40, r = 255, g = 255, b = 255,
     hsl = function () {
         return 'hsl(' + h + ', ' + s + '%, ' + l + '%)';
     },
@@ -15,26 +14,22 @@ let wrap = document.querySelector('#wrap'),
         return 'hex:' + hslToHex(h, s, l);
     }
 
-const hexToRgb = hex =>
-    hex.replace(/^#?([a-f\d])([a-f\d])([a-f\d])$/i
-        , (m, r, g, b) => '#' + r + r + g + g + b + b)
-        .substring(1).match(/.{2}/g)
-        .map(x => parseInt(x, 16));
-document.body.addEventListener('touchmove', handleTouchMove)
+const hexToRgb = hex => hex.replace(/^#?([a-f\d])([a-f\d])([a-f\d])$/i,
+    (m, r, g, b) => '#' + r + r + g + g + b + b).substring(1).match(/.{2}/g).map(x => parseInt(x, 16));
+
+document.body.addEventListener('touchmove', handleTouchMove);
 window.addEventListener('mousemove', handleMouse);
 window.addEventListener('keydown', handleKeys);
 window.addEventListener('click', () => {
     window.removeEventListener('mousemove', handleMouse);
-    copyToClipboard('hslText');
-    setTimeout(function () { window.addEventListener('mousemove', handleMouse) }, 500);
+    copyToClipboard('#hslText');
+    setTimeout(function () {
+        window.addEventListener('mousemove', handleMouse)
+    }, 500);
     return false;
 });
 
-$hsl.innerHTML = hsl();
-$rgb.innerHTML = rgb();
-$hex.innerHTML = hex();
-
-theme.forEach(element => {
+$hsl.innerHTML = hsl(); $rgb.innerHTML = rgb(); $hex.innerHTML = hex(); theme.forEach(element => {
     element.setAttribute("content", hsl());
 });
 
@@ -45,13 +40,10 @@ function handleMouse(event) {
     theme.forEach(element => {
         element.setAttribute("content", hsl());
     });
-
-    wrap.style.backgroundColor = hsl();
-
+    wrap.style.backgroundColor = hsl()
     $hsl.innerHTML = hsl();
     $rgb.innerHTML = rgb();
     $hex.innerHTML = hex();
-
 }
 
 function handleTouchMove(event) {
@@ -68,9 +60,13 @@ function handleTouchMove(event) {
 }
 
 function handleKeys(event) {
-    if (event.keyCode == 38 && l < 100) l++;
-    if (event.keyCode == 40 && l >= 0) l--;
-    if (event.keyCode == 40 && l < 0) l = 0;
+    if (event.keyCode == 38 && l < 100)
+        l++;
+    if (event.keyCode == 40 && l >= 0)
+        l--;
+    if (event.keyCode == 40 && l < 0)
+        l = 0;
+
     $hsl.innerHTML = hsl();
     $rgb.innerHTML = rgb();
     $hex.innerHTML = hex();
@@ -86,18 +82,16 @@ function hslToHex(h, s, l) {
     const f = n => {
         const k = (n + h / 30) % 12;
         const color = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
-        return Math.round(255 * color).toString(16).padStart(2, '0');   // convert to Hex and prefix "0" if needed
+        return Math.round(255 * color).toString(16).padStart(2, '0'); // convert to Hex and prefix "0" if needed
     };
-    return `#${f(0)}${f(8)}${f(4)}`;
+    return `#${f(0)
+        }${f(8)
+        }${f(4)
+        }`;
 }
 
 function copyToClipboard(id) {
-    let r = document.createRange();
-    r.selectNode(document.getElementById(id));
-    window.getSelection().removeAllRanges();
-    window.getSelection().addRange(r);
-    document.execCommand('copy');
-    window.getSelection().removeAllRanges();
+    navigator.clipboard.writeText($hsl.innerHTML);
     showMsg('Copied!');
 }
 
