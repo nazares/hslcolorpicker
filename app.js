@@ -20,13 +20,13 @@ const hexToRgb = hex =>
         , (m, r, g, b) => '#' + r + r + g + g + b + b)
         .substring(1).match(/.{2}/g)
         .map(x => parseInt(x, 16));
-window.addEventListener('touchmove', handleTouchMove)
+document.body.addEventListener('touchmove', handleTouchMove)
 window.addEventListener('mousemove', handleMouse);
 window.addEventListener('keydown', handleKeys);
 window.addEventListener('click', () => {
     window.removeEventListener('mousemove', handleMouse);
     copyToClipboard('hslText');
-    setTimeout(function() {window.addEventListener('mousemove', handleMouse)}, 500);
+    setTimeout(function () { window.addEventListener('mousemove', handleMouse) }, 500);
     return false;
 });
 
@@ -40,7 +40,7 @@ theme.forEach(element => {
 
 function handleMouse(event) {
     h = Math.round(event.clientX / (window.innerWidth / 360)),
-    s = Math.round(event.clientY / (window.innerHeight / 100));
+        s = Math.round(event.clientY / (window.innerHeight / 100));
 
     theme.forEach(element => {
         element.setAttribute("content", hsl());
@@ -55,8 +55,9 @@ function handleMouse(event) {
 }
 
 function handleTouchMove(event) {
-    h = Math.round(event.changedTouches[0].clientX  / (window.innerWidth / 360));
-    s = Math.round(event.changedTouches[0].clientY /  (window.innerHeight / 100));
+    event.preventDefault();
+    h = Math.round(event.changedTouches[0].clientX / (window.innerWidth / 360));
+    s = Math.round(event.changedTouches[0].clientY / (window.innerHeight / 100));
     wrap.style.backgroundColor = hsl();
     $hsl.innerHTML = hsl();
     $rgb.innerHTML = rgb();
