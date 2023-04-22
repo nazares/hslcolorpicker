@@ -41,7 +41,7 @@ h2 {
   margin: 2rem 0;
 }
 
-span {
+span:not([class]) {
   display: block;
     position: absolute;
     font-weight: 100;
